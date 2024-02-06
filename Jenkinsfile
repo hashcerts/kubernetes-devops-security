@@ -13,7 +13,7 @@ pipeline {
     stage('Docker Build and Push') {
       steps {
 	    script {
-			withDockerRegistry([credentialsId: "dockerhub", url: "https://hub.docker.com"]) {
+			withDockerRegistry([credentialsId: "dockerhub", url: ""]) {
 			  sh 'printenv'
 			  sh 'docker build -t hashcerts/numeric-app:""$GIT_COMMIT"" .'
 			  sh 'docker push hashcerts/numeric-app:""$GIT_COMMIT""'
