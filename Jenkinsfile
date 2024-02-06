@@ -11,7 +11,6 @@ pipeline {
       stage('Unit Tests') {
             steps {
               sh "mvn test"
-			  # this is to run the test
             }
         }		
     }
