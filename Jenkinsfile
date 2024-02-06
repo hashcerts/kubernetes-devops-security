@@ -1,6 +1,3 @@
-## Docker Build and Push Stage
-## replace  siddharth67 with your dockerhub username
-
 pipeline {
   agent any
 
@@ -13,14 +10,14 @@ pipeline {
       }
     }
 
-##    stage('Docker Build and Push') {
-##      steps {
-##        withDockerRegistry([credentialsId: "dockerhub", url: ""]) {
-##          sh 'printenv'
-##          sh 'docker build -t hashcerts/numeric-app:""$GIT_COMMIT"" .'
-##          sh 'docker push hashcerts/numeric-app:""$GIT_COMMIT""'
-##        }
-##      }
-##    }
+    stage('Docker Build and Push') {
+      steps {
+        withDockerRegistry([credentialsId: "dockerhub", url: ""]) {
+          sh 'printenv'
+          sh 'docker build -t hashcerts/numeric-app:""$GIT_COMMIT"" .'
+          sh 'docker push hashcerts/numeric-app:""$GIT_COMMIT""'
+        }
+      }
+    }
   }
 }
