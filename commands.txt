@@ -39,3 +39,13 @@ apt update
 
 
 WEB HOOK INTEGRATION
+
+
+DOCKER HUB INTEGRATION
+======================
+#https://docs.oracle.com/cd/E19253-01/816-4557/secfile-60/index.html#:~:text=When%20you%20create%20a%20file,and%20execute%20permission%20to%20everyone.
+chmod 666 docker.sock
+
+
+sudo usermod -aG docker ${USER}
+sudo usermod -aG docker devsecops
