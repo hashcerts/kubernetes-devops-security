@@ -47,5 +47,6 @@ DOCKER HUB INTEGRATION
 chmod 666 docker.sock
 
 
-sudo usermod -aG docker ${USER}
-sudo usermod -aG docker devsecops
+kubectl -n default expose deploy node-app --name node-service --port 5000
+kubectl -n default create deploy node-app --image siddharth67/node-service:v1 
+
