@@ -1,0 +1,41 @@
+Commands:
+
+git clone https://github.com/hashcerts/kubernetes-devops-security.git
+bash kubernetes-devops-security/setup/vm-install-script/install-script.sh
+
+https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-ubuntu-20-04
+https://askubuntu.com/questions/660599/i-am-installing-jenkins-server-but-its-giving-w-gpg-error
+JENKINS
+=======
+##### apt-get -y install openjdk-8-jdk
+
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
+sudo apt update
+sudo apt install jenkins
+
+START
+=====
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+
+
+
+kubectl run nginx-pod --image nginx
+kubectl get po
+
+
+KUBE VERIFICATION
+=================
+kubectl get node -o wide
+
+
+
+bash installer.sh
+
+apt update
+
+
+
+WEB HOOK INTEGRATION
