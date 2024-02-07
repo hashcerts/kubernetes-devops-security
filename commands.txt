@@ -1,4 +1,4 @@
-Commands:
+Commands for reference:
 
 git clone https://github.com/hashcerts/kubernetes-devops-security.git
 bash kubernetes-devops-security/setup/vm-install-script/install-script.sh
