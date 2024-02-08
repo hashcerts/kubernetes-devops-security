@@ -31,12 +31,16 @@ KUBE VERIFICATION
 kubectl get node -o wide
 
 
-
+# Jenkins plugins
 bash installer.sh
 
 apt update
 
 
+KUBECONFIG
+==========
+cd ~
+cat.kube/config
 
 WEB HOOK INTEGRATION
 
@@ -47,6 +51,26 @@ DOCKER HUB INTEGRATION
 chmod 666 docker.sock
 
 
+kubectl -n default create deploy node-app --image hashcerts/node-service:v1 
 kubectl -n default expose deploy node-app --name node-service --port 5000
-kubectl -n default create deploy node-app --image siddharth67/node-service:v1 
 
+
+
+## Talisman Installation
+curl https://thoughtworks.github.io/talisman/install.sh > ~/install-talisman.sh
+chmod +x ~/install-talisman.sh
+cd kubernetes-devops-security/
+~/install-talisman.sh
+
+
+
+## Create sec_files
+mkdir sec_files && cd sec_files
+echo "username=hashcerts" > file1
+echo "secure-password123" > password.txt
+echo "apikey=AizaSyCqhjgrPtr_La56sdUkjfav_laCqhjgrPtr_2s" > file2
+echo "base64encodedsecret=cGFzc3dvcmQtaXMtcXdlcnR5MTIzCg==" > file3
+
+
+
+git add .
