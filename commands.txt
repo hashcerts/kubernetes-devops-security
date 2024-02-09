@@ -73,4 +73,21 @@ echo "base64encodedsecret=cGFzc3dvcmQtaXMtcXdlcnR5MTIzCg==" > file3
 
 
 
-git add .
+git add / push / pull
+
+
+
+
+
+## Run SonarQube as a Docker Container
+docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:8.9.1-community
+
+
+docker ps -a  grep -i sonar
+
+
+# to run the sonarqube SAST
+mvn sonar:sonar \
+  -Dsonar.projectKey=numeric-application \
+  -Dsonar.host.url=http://devsecops-demoez.eastus.cloudapp.azure.com:9000 \
+  -Dsonar.login=fdc69c2d3c1182325a559b5445b6b34902961467

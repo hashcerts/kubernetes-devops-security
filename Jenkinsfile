@@ -9,7 +9,8 @@ pipeline {
                 archive 'target/*.jar'
             }
         }
-        stage('Unit Tests - JUnit and Jacoco') {
+
+        stage('Unit Tests - JUnit and JaCoCo') {
             steps {
                 sh "mvn test"
             }
@@ -20,6 +21,7 @@ pipeline {
                 }
             }
         }
+
         stage('Mutation Tests - PIT') {
             steps {
                 sh "mvn org.pitest:pitest-maven:mutationCoverage"
@@ -31,14 +33,21 @@ pipeline {
             }
         }
 
+        stage('SonarQube - SAST') {
+            steps {
+                sh "mvn sonar:sonar \
+				  -Dsonar.projectKey=numeric-application \
+				  -Dsonar.host.url=http://devsecops-demoez.eastus.cloudapp.azure.com:9000 \
+				  -Dsonar.login=fdc69c2d3c1182325a559b5445b6b34902961467"
+            }
+        }
+
         stage('Docker Build and Push') {
             steps {
-                script {
-                    withDockerRegistry([credentialsId: "docker-hub", url: "https://index.docker.io/v1/"]) {
-                        sh 'printenv'
-                        sh 'docker build -t hashcerts/numeric-app:""$GIT_COMMIT"" .'
-                        sh 'docker push hashcerts/numeric-app:""$GIT_COMMIT""'
-                    }
+                withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
+                    sh 'printenv'
+                    sh 'docker build -t siddharth67/numeric-app:""$GIT_COMMIT"" .'
+                    sh 'docker push siddharth67/numeric-app:""$GIT_COMMIT""'
                 }
             }
         }
@@ -46,11 +55,12 @@ pipeline {
         stage('Kubernetes Deployment - DEV') {
             steps {
                 withKubeConfig([credentialsId: 'kubeconfig']) {
-                    sh "sed -i 's#replace#hashcerts/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
+                    sh "sed -i 's#replace#siddharth67/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
                     sh "kubectl apply -f k8s_deployment_service.yaml"
                 }
             }
         }
 
     }
+
 }
