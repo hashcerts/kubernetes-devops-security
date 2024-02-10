@@ -39,12 +39,23 @@ pipeline {
                     sh "mvn sonar:sonar \
                     -Dsonar.projectKey=numeric-application \
                     -Dsonar.host.url=http://devsecops-demoez.eastus.cloudapp.azure.com:9000 \
-					"
+                    "
                 }
                 timeout(time: 2, unit: 'MINUTES') {
                     script {
                         waitForQualityGate abortPipeline: true
                     }
+                }
+            }
+        }
+
+        stage('Vulnerability Scan - Docker ') {
+            steps {
+                sh "mvn dependency-check:check"
+            }
+            post {
+                always {
+                    dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
                 }
             }
         }
