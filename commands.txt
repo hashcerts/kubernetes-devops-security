@@ -91,3 +91,19 @@ mvn sonar:sonar \
   -Dsonar.projectKey=numeric-application \
   -Dsonar.host.url=http://devsecops-demoez.eastus.cloudapp.azure.com:9000 \
   -Dsonar.login=fdc69c2d3c1182325a559b5445b6b34902961467
+  
+  
+  
+## Trivy
+docker run --rm -v $HOME/Library/Caches:/root/.cache aquasec/trivy:0.18.3 python:3.4-alpine
+
+docker run --rm -v $HOME/Library/Caches:/root/.cache aquasec/trivy:0.18.3 --severity CRITICAL python:3.4-alpine
+
+
+# to print the exit code
+echo $?
+
+
+docker run --rm -v $HOME/Library/Caches:/root/.cache aquasec/trivy:0.18.3 --severity CRITICAL --exit-code 1 python:3.4-alpine
+
+docker run --rm -v $HOME/Library/Caches:/root/.cache aquasec/trivy:0.18.3 --severity LOW --exit-code 0 python:3.4-alpine
