@@ -126,3 +126,9 @@ docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit
 # To find the user for the container / pod
 kubectl get po
 kubectl exec -it devsecops-b4669c6b7-j2c6w -- id
+
+
+# To list the number of users
+cat /etc/passwd | wc -l
+# To show the list of users
+cat /etc/passwd
