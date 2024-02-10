@@ -85,6 +85,8 @@ docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000
 
 docker ps -a  grep -i sonar
 
+docker restart sonarcube [after every single restart of azure virtual machine]
+
 
 # to run the sonarqube SAST
 mvn sonar:sonar \
@@ -107,3 +109,15 @@ echo $?
 docker run --rm -v $HOME/Library/Caches:/root/.cache aquasec/trivy:0.18.3 --severity CRITICAL --exit-code 1 python:3.4-alpine
 
 docker run --rm -v $HOME/Library/Caches:/root/.cache aquasec/trivy:0.18.3 --severity LOW --exit-code 0 python:3.4-alpine
+
+
+
+# check for vulnerability on the command line
+docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light openjdk
+
+docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light openjdk:8
+
+docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light openjdk:8-alpine
+
+# recommended version to be used for Trivy
+docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light adoptopenjdk/openjdk8:alpine-slim 
