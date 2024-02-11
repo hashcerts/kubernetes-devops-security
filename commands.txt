@@ -83,10 +83,11 @@ git add / push / pull
 docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:8.9.1-community
 
 
-docker ps -a  grep -i sonar
+docker ps -a | grep -i sonar
 
 docker restart sonarcube [after every single restart of azure virtual machine]
-
+or
+docker start 6f8e35cfcb5f [use id instead of the name if the above restart command doesn't work]
 
 # to run the sonarqube SAST
 mvn sonar:sonar \

@@ -48,15 +48,14 @@ pipeline {
             steps {
                 parallel(
                     "Dependency Scan": {
-						sh "mvn dependency-check:check" // OWASP
-					},
+                    sh "mvn dependency-check:check" // OWASP
+                },
                     "Trivy Scan": {
-						sh "bash trivy-docker-image-scan.sh"
-					},
+                    sh "bash trivy-docker-image-scan.sh"
+                },
                     "OPA Conftest": {
-						sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
-					}
-				)
+                    sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+                })
             }
         }
         stage('Docker Build and Push') {
@@ -66,6 +65,12 @@ pipeline {
                     sh 'sudo docker build -t hashcerts/numeric-app:""$GIT_COMMIT"" .'
                     sh 'docker push hashcerts/numeric-app:""$GIT_COMMIT""'
                 }
+            }
+        }
+
+        stage('Vulnerability Scan - Kubernetes') {
+            steps {
+                sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
             }
         }
 
