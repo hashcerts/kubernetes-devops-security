@@ -1,5 +1,13 @@
 pipeline {
     agent any
+    environment {
+        deploymentName = "devsecops"
+		containerName = "devsecops-container"
+		serviceName = "devsecops-svc"
+		imageName = "hashcerts/numeric-app:${GIT_COMMIT}"
+		applicationURL = "http://devsecops-demoez.eastus.cloudapp.azure.com/"
+		applicationURI = "/increment/99"
+    }
 
     stages {
 
@@ -74,14 +82,14 @@ pipeline {
             }
         }
 
-//        stage('Kubernetes Deployment - DEV') {
-//            steps {
-//                withKubeConfig([credentialsId: 'kubeconfig']) {
-//                    sh "sed -i 's#replace#hashcerts/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
-//                    sh "kubectl apply -f k8s_deployment_service.yaml"
-//                }
-//            }
-//        }
+        //        stage('Kubernetes Deployment - DEV') {
+        //            steps {
+        //                withKubeConfig([credentialsId: 'kubeconfig']) {
+        //                    sh "sed -i 's#replace#hashcerts/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
+        //                    sh "kubectl apply -f k8s_deployment_service.yaml"
+        //                }
+        //            }
+        //        }
 
         stage('K8S Deployment - DEV') {
             steps {
