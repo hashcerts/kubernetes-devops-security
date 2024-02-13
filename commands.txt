@@ -160,3 +160,6 @@ kubectl rollout undo deploy devsecops
 
 # To get the id of the container pod
 kubectl exec -it devsecops-7455fd6b96-kztw7 -- id
+
+
+kubectl get po devsecops-5fc84cb757-z55hz -o yaml | grep read
