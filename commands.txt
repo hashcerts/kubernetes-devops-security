@@ -133,3 +133,30 @@ kubectl exec -it devsecops-b4669c6b7-j2c6w -- id
 cat /etc/passwd | wc -l
 # To show the list of users
 cat /etc/passwd
+
+
+
+# Kubernetes OPA Conftest
+kubectl get deploy
+
+# Rollout
+kubectl rollout deploy -h
+
+# Rollback
+kubectl rollout history deploy devsecops
+
+kubectl rollout status deploy devsecops
+
+
+# To find out the status of pod
+kubectl describe po
+
+# To get the list of deployment
+kubectl get depoyment
+
+# To undo or rollback a deployment
+kubectl rollout undo deploy devsecops
+
+
+# To get the id of the container pod
+kubectl exec -it devsecops-7455fd6b96-kztw7 -- id
