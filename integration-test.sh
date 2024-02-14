@@ -14,10 +14,6 @@ if [[ ! -z "$PORT" ]];
 then
 
     response=$(curl -s $applicationURL:$PORT$applicationURI)
-	echo response
-	exit 2;
-	
-	
     http_code=$(curl -s -o /dev/null -w "%{http_code}" $applicationURL:$PORT$applicationURI)
 
     if [[ "$response" == 100 ]];
