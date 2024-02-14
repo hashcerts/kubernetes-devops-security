@@ -3,8 +3,8 @@
 #!/bin/bash
 
 
-echo "Trivy scan level stage"
-exit 0;
+echo "Trivy scan level stage" // need to delete this line run the test
+exit 0; // need to delete this line run the test
 
 echo $imageName #getting Image name from env variable
 
