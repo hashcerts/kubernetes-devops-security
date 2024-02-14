@@ -103,10 +103,10 @@ pipeline {
                     sh "bash kubesec-scan.sh"
                 },
                     "Trivy Scan": {
-                    sh '''
-						echo "Trivy Scan level stage"
-					'''
-					//sh "bash trivy-k8s-scan.sh"
+                    sh '' '
+                    						echo "Trivy Scan level stage"
+                    					' ''
+                    //sh "bash trivy-k8s-scan.sh"
                 })
             }
         }
@@ -124,6 +124,23 @@ pipeline {
                         sh "bash k8s-deployment-rollout-status.sh"
                     }
                 })
+            }
+        }
+        stage('Integration Tests - DEV') {
+            steps {
+                script {
+                    try {
+                        withKubeConfig([credentialsId: 'kubeconfig']) {
+                            sh "bash integration-test.sh"
+                        }
+						
+                    } catch (e) {
+                        withKubeConfig([credentialsId: 'kubeconfig']) {
+                            sh "kubectl -n default rollout undo deploy ${deploymentName}"
+                        }
+                        throw e
+                    }
+                }
             }
         }
     }
