@@ -103,9 +103,9 @@ pipeline {
                     sh "bash kubesec-scan.sh"
                 },
                     "Trivy Scan": {
-                    sh '' '
-                    						echo "Trivy Scan level stage"
-                    					' ''
+                    sh '''
+						echo "Trivy Scan level stage"
+					'''
                     //sh "bash trivy-k8s-scan.sh"
                 })
             }
