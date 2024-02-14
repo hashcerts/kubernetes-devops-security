@@ -103,10 +103,7 @@ pipeline {
                     sh "bash kubesec-scan.sh"
                 },
                     "Trivy Scan": {
-                    sh '''
-							echo "Trivy Scan level stage"
-					'''
-                    //sh "bash trivy-k8s-scan.sh"
+                    sh "bash trivy-k8s-scan.sh"
                 })
             }
         }
@@ -140,6 +137,14 @@ pipeline {
                         }
                         throw e
                     }
+                }
+            }
+        }
+
+        stage('OWASP ZAP - DAST') {
+            steps {
+                withKubeConfig([credentialsId: 'kubeconfig']) {
+                    sh 'bash zap.sh'
                 }
             }
         }
