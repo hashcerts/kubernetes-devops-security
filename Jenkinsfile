@@ -6,7 +6,7 @@ pipeline {
             serviceName = "devsecops-svc"
             imageName = "hashcerts/numeric-app:${GIT_COMMIT}"
             applicationURL = "http://devsecops-demoez.eastus.cloudapp.azure.com"
-            applicationURI = "compare/49"
+            applicationURI = "/increment/99"
     }
 
     stages {
@@ -104,7 +104,7 @@ pipeline {
                 },
                     "Trivy Scan": {
                     sh '''
-						echo "Trivy Scan level stage"
+							echo "Trivy Scan level stage"
 					'''
                     //sh "bash trivy-k8s-scan.sh"
                 })
