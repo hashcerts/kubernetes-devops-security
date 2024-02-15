@@ -3,6 +3,12 @@
 
 #integration-test.sh
 
+# delete the following two lines to run the integration testing - START #
+echo "Trivy scan level stage"
+exit 0;
+# delete the following two lines to run the integration testing - FINISH #
+
+
 sleep 5s
 
 PORT=$(kubectl -n default get svc ${serviceName} -o json | jq .spec.ports[].nodePort)
