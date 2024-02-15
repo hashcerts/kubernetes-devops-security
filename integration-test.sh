@@ -4,8 +4,8 @@
 #integration-test.sh
 
 # delete the following two lines to run the integration testing - START #
-echo "Trivy scan level stage"
-exit 0;
+#echo "Skipping integration testing stage"
+#exit 0;
 # delete the following two lines to run the integration testing - FINISH #
 
 
