@@ -44,7 +44,7 @@ public class NumericController {
 			return Integer.parseInt(response);
 		}
 		
-		@GetMapping("/error")
+		@GetMapping("/error/50")
 		public int increment(@PathVariable int value) {
 			return "There is been an error";
 		}
