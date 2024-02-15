@@ -43,11 +43,6 @@ public class NumericController {
 			logger.info("Node Service Response - " + response);
 			return Integer.parseInt(response);
 		}
-		
-		@GetMapping("/error")
-		public int increment(@PathVariable int value) {
-			return "There is been an error";
-		}
 	}
 
 }
