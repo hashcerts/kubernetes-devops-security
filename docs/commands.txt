@@ -160,3 +160,10 @@ kubectl rollout undo deploy devsecops
 
 # To get the id of the container pod
 kubectl exec -it devsecops-7455fd6b96-kztw7 -- id
+
+# Generate ZAP ConfigFile to add ignore rules
+docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-api-scan.py -t http://devsecops-demoez.eastus.cloudapp.azure.com:32270/v3/api-docs -f openapi -g gen_file
+
+
+# Generate ZAP ConfigFile to copy the newly added ignore rules
+docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-api-scan.py -t http://devsecops-demoez.eastus.cloudapp.azure.com:32270/v3/api-docs -f openapi -c gen_file
