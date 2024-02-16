@@ -1,3 +1,5 @@
+// @ Library('slack')_
+
 pipeline {
     agent any
     environment {
@@ -83,15 +85,14 @@ pipeline {
         //}
 
 
-        //        stage('Kubernetes Deployment - DEV') {
-        //            steps {
-        //                withKubeConfig([credentialsId: 'kubeconfig']) {
-        //                    sh "sed -i 's#replace#hashcerts/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
-        //                    sh "kubectl apply -f k8s_deployment_service.yaml"
-        //                }
-        //            }
-        //        }
-
+        //stage('Kubernetes Deployment - DEV') {
+        //steps {
+        //withKubeConfig([credentialsId: 'kubeconfig']) {
+        //sh "sed -i 's#replace#hashcerts/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
+        //sh "kubectl apply -f k8s_deployment_service.yaml"
+        //}
+        //}
+        //}
 
         stage('Vulnerability Scan - Kubernetes') {
             steps {
@@ -156,6 +157,32 @@ pipeline {
                 }
             }
         }
+
+        stage('K8S CIS Benchmark') {
+            steps {
+                script {
+
+                    parallel(
+                        "Master": {
+                        sh "bash cis-master.sh"
+                    },
+                        "Etcd": {
+                        sh "bash cis-etcd.sh"
+                    },
+                        "Kubelet": {
+                        sh "bash cis-kubelet.sh"
+                    })
+
+                }
+            }
+        }
+
+        // stage('Testing Slack') {
+        //    steps {
+        //        sh 'exit 1'
+        //    }
+        //  }
+
     }
 
     post {

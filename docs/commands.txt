@@ -167,3 +167,42 @@ docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-api-scan.py -t 
 
 # Generate ZAP ConfigFile to copy the newly added ignore rules
 docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-api-scan.py -t http://devsecops-demoez.eastus.cloudapp.azure.com:32270/v3/api-docs -f openapi -c gen_file
+
+
+
+
+
+
+
+Section 4
+Kubernetes Operations and Security
+
+docker run --pid=host -v /etc:/etc:ro -v /var:/var:ro -v $(which kubectl):/usr/local/mount-from-host/bin/kubectl -v ~/.kube:/.kube -e KUBECONFIG=/.kube/config -t aquasec/kube-bench:latest  run --targets master --version 1.19 --check 1.2.7,1.2.8,1.2.9 --json | jq .Totals.total_fail
+
+
+Kube-bench
+==========
+https://github.com/aquasecurity/kube-bench/blob/main/docs/installation.md
+
+curl -L https://github.com/aquasecurity/kube-bench/releases/download/v0.6.2/kube-bench_0.6.2_linux_amd64.tar.gz -o kube-bench_0.6.2_linux_amd64.tar.gz
+
+tar -xvf kube-bench_0.6.2_linux_amd64.tar.gz
+
+kube-bench
+
+/var/lib/kubelet/config.yaml
+./kube-bench --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml 
+
+./kube-bench master --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml
+
+# node will be deprecated
+./kube-bench node --check 4.2.1 --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml --json 
+
+# use instead
+./kube-bench run --check 4.2.1 --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml --json 
+
+./kube-bench node --check 4.2.1 --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml --json 
+
+# piping to jq for formatting
+./kube-bench run --check 4.2.1 --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml --json | jq .[].total_pass
+
