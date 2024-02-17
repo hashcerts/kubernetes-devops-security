@@ -190,7 +190,7 @@ tar -xvf kube-bench_0.6.2_linux_amd64.tar.gz
 
 kube-bench
 
-/var/lib/kubelet/config.yaml
+cat /var/lib/kubelet/config.yaml
 ./kube-bench --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml 
 
 ./kube-bench master --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml
@@ -206,3 +206,40 @@ kube-bench
 # piping to jq for formatting
 ./kube-bench run --check 4.2.1 --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml --json | jq .[].total_pass
 
+systemctl restart kubelet
+
+ps -ef | grep kubelet
+
+
+mTLS - ISTIO
+====
+curl -Ls https://istio.io/downloadIstio | ISTIO_VERSION=1.9.0 sh -
+cd istio-1.9.0
+export PATH=$PWD/bin:$PATH
+istioctl install --set profile=demo -y && kubectl apply -f samples/addons
+
+
+#Namespace for Istio
+kubectl -n istio-system get all
+
+
+kubectl get namespaces
+
+kubectl -n istio-system edit svc kiali
+
+
+# formatting sonarqube results in json format
+docker ps --format '{"ID":"{{ .ID }}", "Image": "{{ .Image }}", "Names":"{{ .Names }}"}' | grep "sonarqube" -i
+
+# formatting sonarqube results in json format beautified
+docker ps --format '{"ID":"{{ .ID }}", "Image": "{{ .Image }}", "Names":"{{ .Names }}"}' | grep "sonarqube" -i |  jq .
+
+# formatting sonarqube results in json format beautified and to fetch ID only from the results
+
+
+
+# https://stackoverflow.com/questions/49976188/copy-docker-image-between-repositories
+# docker images pull from one repository and pushing to another one
+docker pull siddharth67/node-service:v1
+docker tag siddharth67/node-service:v1 hashcerts/node-service:v1
+docker push hashcerts/node-service:v1
