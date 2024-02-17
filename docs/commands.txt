@@ -279,3 +279,9 @@ kubectl get po -n prod
 
 
 kubectl -n prod describe po node-app-7bb5f79689-77tst
+
+
+
+
+# while syntax Kiali
+while true; do curl -s localhost:32270/increment/99; echo leep 1; done
