@@ -213,10 +213,14 @@ ps -ef | grep kubelet
 
 mTLS - ISTIO
 ====
+################### Istio Installation ################### 
+
 curl -Ls https://istio.io/downloadIstio | ISTIO_VERSION=1.9.0 sh -
 cd istio-1.9.0
 export PATH=$PWD/bin:$PATH
 istioctl install --set profile=demo -y && kubectl apply -f samples/addons
+
+################### Istio Installation ################### 
 
 
 #Namespace for Istio
@@ -243,3 +247,35 @@ docker ps --format '{"ID":"{{ .ID }}", "Image": "{{ .Image }}", "Names":"{{ .Nam
 docker pull siddharth67/node-service:v1
 docker tag siddharth67/node-service:v1 hashcerts/node-service:v1
 docker push hashcerts/node-service:v1
+
+
+# istio pod to pod communication section
+kubectl get ns
+kubectl create ns prod
+docker images | grep -i node-service
+kubectl -n prod create deploy node-app --image hashcerts/node-service:v1
+kubectl -n prod expose deploy node-app --name node-service --port 5000
+
+kubectl get all -n prod
+
+kubectl get ns --show-labels
+
+kubectl label ns prod istio-injection=enabled
+
+kubectl label ns prod istio-injection=enabled --overwrite=true.
+
+kubectl get po
+
+kubectl get po -n prod
+kubectl -n prod get po
+
+
+
+kubectl -n prod rollout
+
+kubectl -n prod rollout restart deploy node-app
+
+kubectl get po -n prod
+
+
+kubectl -n prod describe po node-app-7bb5f79689-77tst
