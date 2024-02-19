@@ -300,3 +300,51 @@ kubectl apply -f peer-auth.yaml -n istio-system
 Ingress Gateway
 ===============
 kubectl get crd
+kubectl apply -f istio-gateway-vs.yaml
+kubectl get vs,gateway -n prod
+kubectl -n istio-system get svc
+kubectl -n istio-system get svc istio-ingressgateway
+curl localhost:31536/
+curl localhost:31536/increment/11
+
+curl localhost:31536/ -v
+
+kubectl get pa -A
+
+
+kubectl -n istio-system get svc
+
+# change from cluster ip to nodeport
+kubectl -n istio-system edit svc prometheus
+kubectl -n istio-system edit svc grafana
+
+kubectl -n istio-system get svc
+
+kubectl -n prod get svc
+
+kubectl get pa -A
+
+
+Falco
+=====
+https://falco.org/docs/install-operate/installation/
+
+curl -fsSL https://falco.org/repo/falcosecurity-packages.asc | \
+  sudo gpg --dearmor -o /usr/share/keyrings/falco-archive-keyring.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/falco-archive-keyring.gpg] https://download.falco.org/packages/deb stable main" | \
+sudo tee -a /etc/apt/sources.list.d/falcosecurity.list
+
+sudo apt-get update -y
+
+sudo apt install -y dkms make linux-headers-$(uname -r)
+# If you use falcoctl driver loader to build the eBPF probe locally you need also clang toolchain
+sudo apt install -y clang llvm
+# You can install also the dialog package if you want it
+sudo apt install -y dialog
+
+sudo apt-get install -y falco
+
+-------------------------------
+
+journalctl -u falco -f
