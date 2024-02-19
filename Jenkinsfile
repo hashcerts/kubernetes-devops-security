@@ -193,7 +193,22 @@ pipeline {
                 })
             }
         }
-
+        stage('Integration Tests - PROD') {
+            steps {
+                script {
+                    try {
+                        withKubeConfig([credentialsId: 'kubeconfig']) {
+                            sh "bash integration-test-PROD.sh"
+                        }
+                    } catch (e) {
+                        withKubeConfig([credentialsId: 'kubeconfig']) {
+                            sh "kubectl -n prod rollout undo deploy ${deploymentName}"
+                        }
+                        throw e
+                    }
+                }
+            }
+        }
         // stage('Testing Slack') {
         //    steps {
         //        sh 'exit 1'
@@ -210,6 +225,9 @@ pipeline {
             pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
             dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP HTML REPORT', reportTitles: 'OWASP ZAP HTML REPORT', useWrapperFileDirectly: true])
+
+            //Use sendNotifications.groovy from shared library and provide current build result as parameter
+            sendNotification currentBuild.result
         }
 
         // success {
