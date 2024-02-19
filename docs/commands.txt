@@ -248,6 +248,9 @@ docker pull siddharth67/node-service:v1
 docker tag siddharth67/node-service:v1 hashcerts/node-service:v1
 docker push hashcerts/node-service:v1
 
+# in case if docker account isn't available or access permission is denied
+https://forums.docker.com/t/docker-push-error-requested-access-to-the-resource-is-denied/64468
+
 
 # istio pod to pod communication section
 kubectl get ns
@@ -285,3 +288,15 @@ kubectl -n prod describe po node-app-7bb5f79689-77tst
 
 # while syntax Kiali
 while true; do curl -s localhost:32270/increment/99; echo leep 1; done
+while true; do curl -s 10.100.27.145:8080/increment/99; echo ; sleep .1; done
+
+
+
+enable/disable mTLS between pod -- Istio
+========================================
+kubectl apply -f peer-auth.yaml -n istio-system
+
+
+Ingress Gateway
+===============
+kubectl get crd
