@@ -1,0 +1,32 @@
+cat <<EOF > /home/vault/app-policy.hcl
+path "crds/data/mongodb" { 
+   capabilities = ["create", "update", "read"]
+} 
+
+path "crds/data/mysql" { 
+   capabilities = ["read"]
+}
+EOF
+
+
+
+
+
+vault policy write app /home/vault/app-policy.hcl
+
+
+vault policy list
+
+vault policy read app
+
+
+vault token create -field token -policy=app
+
+
+export VAULT_TOKEN="$(vault token create -field token -policy=app)"
+echo $VAULT_TOKEN
+
+vault kv put crds/mysql username=siddharth
+
+
+Note - DO NOT FORGET to replace the VAULT_TOKEN with Root Token

@@ -1,0 +1,15 @@
+## installing HELM
+export VERIFY_CHECKSUM=false 
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+helm version
+
+
+
+# adding Hashicorp Helm Repo
+helm repo add hashicorp https://helm.releases.hashicorp.com
+
+
+# installating Vault
+helm install vault --set='ui.enabled=true' \
+--set='ui.serviceType=NodePort' \
+--set='server.dataStorage.enabled=false' hashicorp/vault --version 0.16.1

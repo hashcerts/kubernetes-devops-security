@@ -1,0 +1,11 @@
+kubectl exec -it vault-0 -- /bin/sh
+
+vault status
+
+vault operator init
+
+vault operator unseal <token 1>
+vault operator unseal <token 2>
+vault operator unseal <token 3>
+
+vault login <Initial Root Token>

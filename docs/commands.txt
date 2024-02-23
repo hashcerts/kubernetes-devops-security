@@ -348,3 +348,153 @@ sudo apt-get install -y falco
 -------------------------------
 
 journalctl -u falco -f
+
+
+# HELM installation
+===================
+export VERIFY_CHECKSUM=false 
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+helm version
+
+kubectl version --short
+
+helm version --short
+
+helm repo add hashicorp https://helm.releases.hashicorp.com
+
+kubectl create ns demo
+
+helm install vault --set='ui.enabled=true' \
+--set='ui.serviceType=NodePort' \
+--set='server.dataStorage.enabled=false' hashicorp/vault --version 0.16.1
+
+
+kubectl exec -it vault-0 -- vault status
+
+Unseal and Login to vault
+========================
+kubectl exec -it vault-0 -- bin/sh
+
+vault operator init
+
+vault operator unseal GkR9FL8eqA5fOPwOkOK2vT7WajH9qHkpNssRzJctRXFp // 3 keys to be used
+
+vault login s.4hHjrjbVAd1luPykPmTwnvJ7 // vault token to keep token accessor => ZY986xNcyLkJdMW9Xr5kbPNF
+
+Secrets Data
+============
+
+vault secrets enable -path=crds kv-v2
+
+vault kv put crds/mysql username=root password=12345 apikey=adsaiojB78VIHGIhdas
+
+vault kv metadata  get crds/mysql
+
+vault kv get crds/mysql
+
+
+Vault Authorization
+===================
+cat <<EOF > /home/vault/app-policy.hcl
+path "crds/data/mongodb" { 
+   capabilities = ["create", "update", "read"]
+} 
+
+path "crds/data/mysql" { 
+   capabilities = ["read"]
+}
+EOF
+
+
+
+vault policy write app /home/vault/app-policy.hcl
+
+
+vault policy list
+
+#vault token create -field token -policy=app
+
+export VAULT_TOKEN="$(vault token create -field token -policy=app)"
+
+export VAULT_TOKEN=s.4hHjrjbVAd1luPykPmTwnvJ7
+
+
+vault kv put crds/mysql username=siddharth
+
+
+#Note - DO NOT FORGET to replace the VAULT_TOKEN with Root Token
+
+Vault Authentication
+====================
+
+vault auth enable kubernetes
+
+
+vault write auth/kubernetes/config \
+   token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+   kubernetes_host=https://${KUBERNETES_PORT_443_TCP_ADDR}:443 \
+   kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+
+# to run for demo
+vault write auth/kubernetes/role/phpapp \
+   bound_service_account_names=app \
+   bound_service_account_namespaces=demo \
+   policies=app \
+   ttl=1h
+   
+# to run for default   
+vault write auth/kubernetes/role/phpapp \
+   bound_service_account_names=app \
+   bound_service_account_namespaces="default" \
+   policies=app \
+   ttl=1h
+   
+kubectl describe clusterrolebinding vault-server-binding
+
+DEPLOY Application and use secrets from Vault
+=============================================
+
+git clone https://github.com/sidd-harth/php-vault-example.git
+
+cd php-vault-example/
+
+docker build -t php:vault .
+nano php-app-k8s-deploy.yaml
+kubectl apply -f php-app-k8s-deploy.yaml
+
+
+kubectl get po
+kubectl get svc
+kubectl get sa
+
+USE CREDS FROM Vault
+====================
+kubectl get po
+cd php-vault-example/
+#cat patch-annotations.yaml
+
+kubectl patch deploy php -p "$(cat patch-annotations.yaml)"
+
+
+#https://stackoverflow.com/questions/17236796/how-to-remove-old-docker-containers
+#will delete ALL unused data (i.e., in order: containers stopped, volumes without containers and images with no containers)
+docker container prune 
+
+
+docker system prune
+
+#WARNING! This will remove:
+#    - all stopped containers
+#    - all volumes not used by at least one container
+#    - all images without at least one container associated to them
+#Are you sure you want to continue? [y/N] y
+
+# https://spacelift.io/blog/restart-kubernetes-pods-with-kubectl
+# to delete kubernetes pods
+
+kubectl get events
+
+kubectl patch deploy php -p "$(cat patch-annotations-template.yaml)"
+
+

@@ -1,0 +1,5 @@
+kubectl patch deploy php -p "$(cat patch-annotations.yaml)"
+
+
+
+kubectl patch deploy php -p "$(cat patch-annotations-template.yaml)"
